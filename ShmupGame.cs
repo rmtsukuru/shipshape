@@ -21,6 +21,9 @@ namespace ShipShape
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
+        Texture2D playerShipTexture;
+        Vector2 playerShipPosition;
+
         public ShmupGame()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -36,6 +39,7 @@ namespace ShipShape
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+            this.playerShipPosition = new Vector2(320, 240);
 
             base.Initialize();
         }
@@ -50,6 +54,7 @@ namespace ShipShape
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
+            this.playerShipTexture = Content.Load<Texture2D>("pentagon");
         }
 
         /// <summary>
@@ -69,7 +74,8 @@ namespace ShipShape
         protected override void Update(GameTime gameTime)
         {
             // Allows the game to exit
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
+                Keyboard.GetState().IsKeyDown(Keys.Escape))
                 this.Exit();
 
             // TODO: Add your update logic here
@@ -83,9 +89,14 @@ namespace ShipShape
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.Black);
 
             // TODO: Add your drawing code here
+            spriteBatch.Begin();
+
+            spriteBatch.Draw(playerShipTexture, playerShipPosition, Color.White);
+
+            spriteBatch.End();
 
             base.Draw(gameTime);
         }
