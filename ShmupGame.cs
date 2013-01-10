@@ -18,6 +18,13 @@ namespace ShipShape
     /// </summary>
     public class ShmupGame : Microsoft.Xna.Framework.Game
     {
+        #region Constants
+
+        const int WindowWidth = 800;
+        const int WindowHeight = 600;
+
+        #endregion
+
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
@@ -27,6 +34,8 @@ namespace ShipShape
         public ShmupGame()
         {
             graphics = new GraphicsDeviceManager(this);
+            graphics.PreferredBackBufferWidth = WindowWidth;
+            graphics.PreferredBackBufferHeight = WindowHeight;
             Content.RootDirectory = "Content";
         }
 
