@@ -1,7 +1,0 @@
-C:\Users\Sam\Documents\dev\cs\msvcs\shipshape\bin\x86\Debug\ShipShape.exe
-C:\Users\Sam\Documents\dev\cs\msvcs\shipshape\bin\x86\Debug\ShipShape.pdb
-C:\Users\Sam\Documents\dev\cs\msvcs\shipshape\obj\x86\Debug\ResolveAssemblyReference.cache
-C:\Users\Sam\Documents\dev\cs\msvcs\shipshape\obj\x86\Debug\Microsoft.Xna.Framework.RuntimeProfile.txt
-C:\Users\Sam\Documents\dev\cs\msvcs\shipshape\obj\x86\Debug\ShipShape.exe
-C:\Users\Sam\Documents\dev\cs\msvcs\shipshape\obj\x86\Debug\ShipShape.pdb
-C:\Users\Sam\Documents\dev\cs\msvcs\shipshape\bin\x86\Debug\Content\pentagon.xnb
