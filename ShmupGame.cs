@@ -23,6 +23,8 @@ namespace ShipShape
         const int WindowWidth = 800;
         const int WindowHeight = 600;
 
+        const int PlayerShipSpeed = 3;
+
         #endregion
 
         GraphicsDeviceManager graphics;
@@ -88,6 +90,22 @@ namespace ShipShape
                 this.Exit();
 
             // TODO: Add your update logic here
+            if (Keyboard.GetState().IsKeyDown(Keys.Left))
+            {
+                this.playerShipPosition.X -= PlayerShipSpeed;
+            }
+            if (Keyboard.GetState().IsKeyDown(Keys.Right))
+            {
+                this.playerShipPosition.X += PlayerShipSpeed;
+            }
+            if (Keyboard.GetState().IsKeyDown(Keys.Up))
+            {
+                this.playerShipPosition.Y -= PlayerShipSpeed;
+            }
+            if (Keyboard.GetState().IsKeyDown(Keys.Down))
+            {
+                this.playerShipPosition.Y += PlayerShipSpeed;
+            }
 
             base.Update(gameTime);
         }
