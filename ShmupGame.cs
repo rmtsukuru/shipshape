@@ -24,14 +24,22 @@ namespace ShipShape
         const int WindowHeight = 600;
 
         const int PlayerShipSpeed = 3;
+        const int PlayerShipStartingX = 320;
+        const int PlayerShipStartingY = 240;
+
+        const int PlayerMissileSpeed = 6;
 
         #endregion
 
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        KeyboardState lastKeyboardState;
 
         Texture2D playerShipTexture;
         Vector2 playerShipPosition;
+
+        Texture2D playerMissileTexture;
+        IList<Vector2> playerMissilePositions;
 
         public ShmupGame()
         {
@@ -50,7 +58,10 @@ namespace ShipShape
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            this.playerShipPosition = new Vector2(320, 240);
+            this.lastKeyboardState = Keyboard.GetState();
+
+            this.playerShipPosition = new Vector2(PlayerShipStartingX, PlayerShipStartingY);
+            this.playerMissilePositions = new List<Vector2>();
 
             base.Initialize();
         }
@@ -66,6 +77,7 @@ namespace ShipShape
 
             // TODO: use this.Content to load your game content here
             this.playerShipTexture = Content.Load<Texture2D>("pentagon");
+            this.playerMissileTexture = Content.Load<Texture2D>("missile");
         }
 
         /// <summary>
@@ -90,6 +102,28 @@ namespace ShipShape
                 this.Exit();
 
             // TODO: Add your update logic here
+            UpdateInput(gameTime);
+
+            for (int i = 0; i < playerMissilePositions.Count; i++)
+            {
+                Vector2 temp = playerMissilePositions[i];
+                playerMissilePositions[i] = new Vector2(temp.X + PlayerMissileSpeed, temp.Y);
+                if (playerMissilePositions[i].X > WindowWidth)
+                {
+                    playerMissilePositions.RemoveAt(i);
+                    i--;
+                }
+            }
+
+            base.Update(gameTime);
+        }
+
+        /// <summary>
+        /// Performs input processing.
+        /// </summary>
+        /// <param name="gameTime">Provides a snapshot of timing values.</param>
+        private void UpdateInput(GameTime gameTime)
+        {
             if (Keyboard.GetState().IsKeyDown(Keys.Left))
             {
                 this.playerShipPosition.X -= PlayerShipSpeed;
@@ -107,7 +141,13 @@ namespace ShipShape
                 this.playerShipPosition.Y += PlayerShipSpeed;
             }
 
-            base.Update(gameTime);
+            if (Keyboard.GetState().IsKeyDown(Keys.Z) && lastKeyboardState.IsKeyUp(Keys.Z))
+            {
+                this.playerMissilePositions.Add(new Vector2(playerShipPosition.X + playerShipTexture.Width / 2, 
+                    playerShipPosition.Y + playerShipTexture.Height * 3 / 8));
+            }
+
+            this.lastKeyboardState = Keyboard.GetState();
         }
 
         /// <summary>
@@ -122,6 +162,11 @@ namespace ShipShape
             spriteBatch.Begin();
 
             spriteBatch.Draw(playerShipTexture, playerShipPosition, Color.White);
+
+            foreach (Vector2 position in playerMissilePositions)
+            {
+                spriteBatch.Draw(playerMissileTexture, position, Color.White);
+            }
 
             spriteBatch.End();
 

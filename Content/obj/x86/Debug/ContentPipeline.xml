@@ -8,7 +8,16 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Sam\Documents\dev\cs\msvcs\shipshape\bin\x86\Debug\Content\pentagon.xnb</Output>
-      <Time>2013-01-09T17:04:47.1379368-05:00</Time>
+      <Time>2013-01-09T21:39:23.9936315-05:00</Time>
+    </Item>
+    <Item>
+      <Source>missile.png</Source>
+      <Name>missile</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Sam\Documents\dev\cs\msvcs\shipshape\bin\x86\Debug\Content\missile.xnb</Output>
+      <Time>2013-01-09T21:46:21.399538-05:00</Time>
     </Item>
     <BuildSuccessful>true</BuildSuccessful>
     <Settings>
