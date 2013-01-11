@@ -20,29 +20,41 @@ namespace ShipShape
     {
         #region Constants
 
-        const int WindowWidth = 800;
-        const int WindowHeight = 600;
+        private const int WindowWidth = 800;
+        private const int WindowHeight = 600;
 
-        const int PlayerShipSpeed = 3;
-        const int PlayerShipStartingX = 320;
-        const int PlayerShipStartingY = 240;
+        private const int PlayerShipSpeed = 3;
+        private const int PlayerShipStartingX = 320;
+        private const int PlayerShipStartingY = 240;
 
-        const int PlayerMissileSpeed = 6;
+        private const int PlayerMissileSpeed = 6;
+
+        private const double BaseEnemySpawnRate = .25;
+        private const double EnemySpawnChance = 0.6;
+        private const int EnemyShipSpeed = 4;
 
         #endregion
 
-        GraphicsDeviceManager graphics;
-        SpriteBatch spriteBatch;
-        KeyboardState lastKeyboardState;
+        private GraphicsDeviceManager graphics;
+        private SpriteBatch spriteBatch;
+        private KeyboardState lastKeyboardState;
 
-        Texture2D playerShipTexture;
-        Vector2 playerShipPosition;
+        private Random random;
 
-        Texture2D playerMissileTexture;
-        IList<Vector2> playerMissilePositions;
+        private Texture2D playerShipTexture;
+        private Vector2 playerShipPosition;
+
+        private Texture2D playerMissileTexture;
+        private IList<Vector2> playerMissilePositions;
+
+        private double enemySpawnTimer;
+        private Texture2D enemyShipTexture;
+        private IList<Vector2> enemyShipPositions;
 
         public ShmupGame()
         {
+            random = new Random();
+
             graphics = new GraphicsDeviceManager(this);
             graphics.PreferredBackBufferWidth = WindowWidth;
             graphics.PreferredBackBufferHeight = WindowHeight;
@@ -62,6 +74,9 @@ namespace ShipShape
 
             this.playerShipPosition = new Vector2(PlayerShipStartingX, PlayerShipStartingY);
             this.playerMissilePositions = new List<Vector2>();
+            this.enemyShipPositions = new List<Vector2>();
+
+            this.enemySpawnTimer = BaseEnemySpawnRate;
 
             base.Initialize();
         }
@@ -78,6 +93,7 @@ namespace ShipShape
             // TODO: use this.Content to load your game content here
             this.playerShipTexture = Content.Load<Texture2D>("pentagon");
             this.playerMissileTexture = Content.Load<Texture2D>("missile");
+            this.enemyShipTexture = Content.Load<Texture2D>("enemy1");
         }
 
         /// <summary>
@@ -99,10 +115,23 @@ namespace ShipShape
             // Allows the game to exit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
                 Keyboard.GetState().IsKeyDown(Keys.Escape))
+            {
                 this.Exit();
+            }
 
             // TODO: Add your update logic here
             UpdateInput(gameTime);
+
+            enemySpawnTimer -= gameTime.ElapsedGameTime.TotalSeconds;
+            if (enemySpawnTimer <= 0)
+            {
+                if (EnemySpawnChance <= random.NextDouble())
+                {
+                    enemyShipPositions.Add(new Vector2(WindowWidth, random.Next(0, 
+                        WindowHeight - enemyShipTexture.Height)));
+                }
+                enemySpawnTimer = BaseEnemySpawnRate;
+            }
 
             for (int i = 0; i < playerMissilePositions.Count; i++)
             {
@@ -111,6 +140,17 @@ namespace ShipShape
                 if (playerMissilePositions[i].X > WindowWidth)
                 {
                     playerMissilePositions.RemoveAt(i);
+                    i--;
+                }
+            }
+
+            for (int i = 0; i < enemyShipPositions.Count; i++)
+            {
+                Vector2 temp = enemyShipPositions[i];
+                enemyShipPositions[i] = new Vector2(temp.X - EnemyShipSpeed, temp.Y);
+                if (enemyShipPositions[i].X < 0)
+                {
+                    enemyShipPositions.RemoveAt(i);
                     i--;
                 }
             }
@@ -166,6 +206,11 @@ namespace ShipShape
             foreach (Vector2 position in playerMissilePositions)
             {
                 spriteBatch.Draw(playerMissileTexture, position, Color.White);
+            }
+
+            foreach (Vector2 position in enemyShipPositions)
+            {
+                spriteBatch.Draw(enemyShipTexture, position, Color.White);
             }
 
             spriteBatch.End();

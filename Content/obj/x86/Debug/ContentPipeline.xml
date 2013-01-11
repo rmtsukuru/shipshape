@@ -19,6 +19,15 @@
       <Output>C:\Users\Sam\Documents\dev\cs\msvcs\shipshape\bin\x86\Debug\Content\missile.xnb</Output>
       <Time>2013-01-09T21:46:21.399538-05:00</Time>
     </Item>
+    <Item>
+      <Source>enemy1.png</Source>
+      <Name>enemy1</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Sam\Documents\dev\cs\msvcs\shipshape\bin\x86\Debug\Content\enemy1.xnb</Output>
+      <Time>2013-01-10T22:41:46.9846682-05:00</Time>
+    </Item>
     <BuildSuccessful>true</BuildSuccessful>
     <Settings>
       <TargetPlatform>Windows</TargetPlatform>
