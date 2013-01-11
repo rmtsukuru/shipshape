@@ -23,15 +23,16 @@ namespace ShipShape
         private const int WindowWidth = 800;
         private const int WindowHeight = 600;
 
-        private const int PlayerShipSpeed = 3;
+        private const int PlayerShipSpeed = 5;
         private const int PlayerShipStartingX = 320;
         private const int PlayerShipStartingY = 240;
 
-        private const int PlayerMissileSpeed = 6;
+        private const int PlayerMissileSpeed = 8;
 
         private const double BaseEnemySpawnRate = .25;
-        private const double EnemySpawnChance = 0.6;
-        private const int EnemyShipSpeed = 2;
+        private const double EnemySpawnChance = 0.8;
+        private const int EnemyShipSpeed = 4;
+        private const int EnemyPointValue = 100;
 
         #endregion
 
@@ -40,6 +41,10 @@ namespace ShipShape
         private KeyboardState lastKeyboardState;
 
         private Random random;
+
+        private SpriteFont hudFont;
+
+        private int playerScore;
 
         private Texture2D playerShipTexture;
         private Vector2 playerShipPosition;
@@ -72,6 +77,8 @@ namespace ShipShape
             // TODO: Add your initialization logic here
             this.lastKeyboardState = Keyboard.GetState();
 
+            this.playerScore = 0;
+
             this.playerShipPosition = new Vector2(PlayerShipStartingX, PlayerShipStartingY);
             this.playerMissilePositions = new List<Vector2>();
             this.enemyShipPositions = new List<Vector2>();
@@ -91,6 +98,8 @@ namespace ShipShape
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
+            this.hudFont = Content.Load<SpriteFont>("8BIT WONDER");
+
             this.playerShipTexture = Content.Load<Texture2D>("pentagon");
             this.playerMissileTexture = Content.Load<Texture2D>("missile");
             this.enemyShipTexture = Content.Load<Texture2D>("enemy1");
@@ -125,7 +134,7 @@ namespace ShipShape
             enemySpawnTimer -= gameTime.ElapsedGameTime.TotalSeconds;
             if (enemySpawnTimer <= 0)
             {
-                if (EnemySpawnChance <= random.NextDouble())
+                if (EnemySpawnChance >= random.NextDouble())
                 {
                     enemyShipPositions.Add(new Vector2(WindowWidth, random.Next(0, 
                         WindowHeight - enemyShipTexture.Height)));
@@ -161,6 +170,7 @@ namespace ShipShape
                         playerMissilePositions.RemoveAt(j);
                         j--;
                         enemyShipPositions[i] = new Vector2(-2000, 0);
+                        this.playerScore += EnemyPointValue;
                     }
                 }
 
@@ -229,9 +239,20 @@ namespace ShipShape
                 spriteBatch.Draw(enemyShipTexture, position, Color.White);
             }
 
+            DrawHUD(gameTime);
+
             spriteBatch.End();
 
             base.Draw(gameTime);
+        }
+
+        /// <summary>
+        /// Draws Heads-Up Display (HUD).
+        /// </summary>
+        /// <param name="gameTime">Provides a snapshot of timing values.</param>
+        private void DrawHUD(GameTime gameTime)
+        {
+            spriteBatch.DrawString(hudFont, "SCORE: " + playerScore.ToString(), Vector2.Zero, Color.Blue);
         }
     }
 }
