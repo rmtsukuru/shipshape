@@ -31,7 +31,7 @@ namespace ShipShape
 
         private const double BaseEnemySpawnRate = .25;
         private const double EnemySpawnChance = 0.6;
-        private const int EnemyShipSpeed = 4;
+        private const int EnemyShipSpeed = 2;
 
         #endregion
 
@@ -148,7 +148,23 @@ namespace ShipShape
             {
                 Vector2 temp = enemyShipPositions[i];
                 enemyShipPositions[i] = new Vector2(temp.X - EnemyShipSpeed, temp.Y);
-                if (enemyShipPositions[i].X < 0)
+
+                for (int j = 0; j < playerMissilePositions.Count; j++)
+                {
+                    Vector2 enemy = enemyShipPositions[i];
+                    Vector2 missile = playerMissilePositions[j];
+                    if (enemy.X < missile.X + playerMissileTexture.Width && 
+                        enemy.X + enemyShipTexture.Width > missile.X &&
+                        enemy.Y < missile.Y + playerMissileTexture.Height &&
+                        enemy.Y + enemyShipTexture.Height > missile.Y)
+                    {
+                        playerMissilePositions.RemoveAt(j);
+                        j--;
+                        enemyShipPositions[i] = new Vector2(-2000, 0);
+                    }
+                }
+
+                if (enemyShipPositions[i].X < 0 - enemyShipTexture.Width)
                 {
                     enemyShipPositions.RemoveAt(i);
                     i--;
