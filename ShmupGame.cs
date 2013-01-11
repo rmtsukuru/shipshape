@@ -121,13 +121,6 @@ namespace ShipShape
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            // Allows the game to exit
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
-                Keyboard.GetState().IsKeyDown(Keys.Escape))
-            {
-                this.Exit();
-            }
-
             // TODO: Add your update logic here
             UpdateInput(gameTime);
 
@@ -155,12 +148,11 @@ namespace ShipShape
 
             for (int i = 0; i < enemyShipPositions.Count; i++)
             {
-                Vector2 temp = enemyShipPositions[i];
-                enemyShipPositions[i] = new Vector2(temp.X - EnemyShipSpeed, temp.Y);
+                Vector2 enemy = enemyShipPositions[i];
+                enemyShipPositions[i] = new Vector2(enemy.X - EnemyShipSpeed, enemy.Y);
 
                 for (int j = 0; j < playerMissilePositions.Count; j++)
                 {
-                    Vector2 enemy = enemyShipPositions[i];
                     Vector2 missile = playerMissilePositions[j];
                     if (enemy.X < missile.X + playerMissileTexture.Width && 
                         enemy.X + enemyShipTexture.Width > missile.X &&
@@ -172,6 +164,14 @@ namespace ShipShape
                         enemyShipPositions[i] = new Vector2(-2000, 0);
                         this.playerScore += EnemyPointValue;
                     }
+                }
+
+                if (enemy.X < playerShipPosition.X + playerMissileTexture.Width &&
+                        enemy.X + enemyShipTexture.Width > playerShipPosition.X &&
+                        enemy.Y < playerShipPosition.Y + playerMissileTexture.Height &&
+                        enemy.Y + enemyShipTexture.Height > playerShipPosition.Y)
+                {
+                    this.Exit();
                 }
 
                 if (enemyShipPositions[i].X < 0 - enemyShipTexture.Width)
@@ -190,6 +190,13 @@ namespace ShipShape
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         private void UpdateInput(GameTime gameTime)
         {
+            // Allows the game to exit
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
+                Keyboard.GetState().IsKeyDown(Keys.Escape))
+            {
+                this.Exit();
+            }
+
             if (Keyboard.GetState().IsKeyDown(Keys.Left))
             {
                 this.playerShipPosition.X -= PlayerShipSpeed;
