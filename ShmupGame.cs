@@ -23,6 +23,8 @@ namespace ShipShape
         private const int WindowWidth = 800;
         private const int WindowHeight = 600;
 
+        private const int PlayerStartingScore = 0;
+
         private const int PlayerShipSpeed = 5;
         private const int PlayerShipStartingX = 320;
         private const int PlayerShipStartingY = 240;
@@ -81,7 +83,7 @@ namespace ShipShape
 
             this.isPaused = false;
 
-            this.playerScore = 0;
+            this.playerScore = PlayerStartingScore;
 
             this.playerShipPosition = new Vector2(PlayerShipStartingX, PlayerShipStartingY);
             this.playerMissilePositions = new List<Vector2>();
