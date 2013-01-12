@@ -135,6 +135,23 @@ namespace ShipShape
                 enemySpawnTimer = BaseEnemySpawnRate;
             }
 
+            if (playerShipPosition.X < 0)
+            {
+                playerShipPosition.X = 0;
+            }
+            if (playerShipPosition.X + playerShipTexture.Width > WindowWidth)
+            {
+                playerShipPosition.X = WindowWidth - playerShipTexture.Width;
+            }
+            if (playerShipPosition.Y < 0)
+            {
+                playerShipPosition.Y = 0;
+            }
+            if (playerShipPosition.Y + playerShipTexture.Height > WindowHeight)
+            {
+                playerShipPosition.Y = WindowHeight - playerShipTexture.Height;
+            }
+
             for (int i = 0; i < playerMissilePositions.Count; i++)
             {
                 Vector2 temp = playerMissilePositions[i];
