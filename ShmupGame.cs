@@ -46,6 +46,8 @@ namespace ShipShape
 
         private int playerScore;
 
+        private bool isPaused;
+
         private Texture2D playerShipTexture;
         private Vector2 playerShipPosition;
 
@@ -76,6 +78,8 @@ namespace ShipShape
         {
             // TODO: Add your initialization logic here
             this.lastKeyboardState = Keyboard.GetState();
+
+            this.isPaused = false;
 
             this.playerScore = 0;
 
@@ -124,12 +128,30 @@ namespace ShipShape
             // TODO: Add your update logic here
             UpdateInput(gameTime);
 
+            if (this.isPaused)
+            {
+                UpdatePaused(gameTime);
+            }
+            else
+            {
+                UpdateUnpaused(gameTime);
+            }
+
+            base.Update(gameTime);
+        }
+
+        /// <summary>
+        /// Updates game while not paused.
+        /// </summary>
+        /// <param name="gameTime">Provides a snapshot of timing values.</param>
+        private void UpdateUnpaused(GameTime gameTime)
+        {
             enemySpawnTimer -= gameTime.ElapsedGameTime.TotalSeconds;
             if (enemySpawnTimer <= 0)
             {
                 if (EnemySpawnChance >= random.NextDouble())
                 {
-                    enemyShipPositions.Add(new Vector2(WindowWidth, random.Next(0, 
+                    enemyShipPositions.Add(new Vector2(WindowWidth, random.Next(0,
                         WindowHeight - enemyShipTexture.Height)));
                 }
                 enemySpawnTimer = BaseEnemySpawnRate;
@@ -171,7 +193,7 @@ namespace ShipShape
                 for (int j = 0; j < playerMissilePositions.Count; j++)
                 {
                     Vector2 missile = playerMissilePositions[j];
-                    if (enemy.X < missile.X + playerMissileTexture.Width && 
+                    if (enemy.X < missile.X + playerMissileTexture.Width &&
                         enemy.X + enemyShipTexture.Width > missile.X &&
                         enemy.Y < missile.Y + playerMissileTexture.Height &&
                         enemy.Y + enemyShipTexture.Height > missile.Y)
@@ -197,8 +219,15 @@ namespace ShipShape
                     i--;
                 }
             }
+        }
 
-            base.Update(gameTime);
+        /// <summary>
+        /// Updates game while paused.
+        /// </summary>
+        /// <param name="gameTime">Provides a snapshot of timing values.</param>
+        private void UpdatePaused(GameTime gameTime)
+        {
+            // Currently does nothing lol.
         }
 
         /// <summary>
@@ -207,11 +236,30 @@ namespace ShipShape
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         private void UpdateInput(GameTime gameTime)
         {
+            if (this.isPaused)
+            {
+                UpdatePausedInput(gameTime);
+            }
+            else
+            {
+                UpdateUnpausedInput(gameTime);
+            }
+
+            this.lastKeyboardState = Keyboard.GetState();
+        }
+
+        private void UpdateUnpausedInput(GameTime gameTime)
+        {
             // Allows the game to exit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
                 Keyboard.GetState().IsKeyDown(Keys.Escape))
             {
                 this.Exit();
+            }
+
+            if (Keyboard.GetState().IsKeyDown(Keys.Q) && lastKeyboardState.IsKeyUp(Keys.Q))
+            {
+                this.isPaused = true;
             }
 
             if (Keyboard.GetState().IsKeyDown(Keys.Left))
@@ -233,11 +281,24 @@ namespace ShipShape
 
             if (Keyboard.GetState().IsKeyDown(Keys.Z) && lastKeyboardState.IsKeyUp(Keys.Z))
             {
-                this.playerMissilePositions.Add(new Vector2(playerShipPosition.X + playerShipTexture.Width / 2, 
+                this.playerMissilePositions.Add(new Vector2(playerShipPosition.X + playerShipTexture.Width / 2,
                     playerShipPosition.Y + playerShipTexture.Height * 3 / 8));
             }
+        }
 
-            this.lastKeyboardState = Keyboard.GetState();
+        private void UpdatePausedInput(GameTime gameTime)
+        {
+            // Allows the game to exit
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
+                Keyboard.GetState().IsKeyDown(Keys.Escape))
+            {
+                this.Exit();
+            }
+
+            if (Keyboard.GetState().IsKeyDown(Keys.Q) && lastKeyboardState.IsKeyUp(Keys.Q))
+            {
+                this.isPaused = false;
+            }
         }
 
         /// <summary>
@@ -277,6 +338,14 @@ namespace ShipShape
         private void DrawHUD(GameTime gameTime)
         {
             spriteBatch.DrawString(hudFont, "SCORE: " + playerScore.ToString(), Vector2.Zero, Color.Blue);
+
+            if (this.isPaused)
+            {
+                Vector2 stringSize = hudFont.MeasureString("PAUSED");
+                Vector2 stringPos = new Vector2(WindowWidth / 2 - stringSize.X / 2, 
+                                                WindowHeight / 2 - stringSize.Y / 2);
+                spriteBatch.DrawString(hudFont, "PAUSED", stringPos, Color.Gray);
+            }
         }
     }
 }
