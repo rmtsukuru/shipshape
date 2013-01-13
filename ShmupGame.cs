@@ -28,12 +28,15 @@ namespace ShipShape
         private const int PlayerShipSpeed = 5;
         private const int PlayerShipStartingX = 320;
         private const int PlayerShipStartingY = 240;
+        private const int PlayerMaxHealth = 100;
+        private const int PlayerStartingHealth = 100;
 
         private const int PlayerMissileSpeed = 8;
 
         private const double BaseEnemySpawnRate = .25;
         private const double EnemySpawnChance = 0.8;
         private const int EnemyShipSpeed = 4;
+        private const int EnemyCrashDamage = 10;
         private const int EnemyPointValue = 100;
 
         #endregion
@@ -47,6 +50,7 @@ namespace ShipShape
         private SpriteFont hudFont;
 
         private int playerScore;
+        private int playerHealth;
 
         private bool isPaused;
 
@@ -84,6 +88,7 @@ namespace ShipShape
             this.isPaused = false;
 
             this.playerScore = PlayerStartingScore;
+            this.playerHealth = PlayerStartingHealth;
 
             this.playerShipPosition = new Vector2(PlayerShipStartingX, PlayerShipStartingY);
             this.playerMissilePositions = new List<Vector2>();
@@ -176,6 +181,15 @@ namespace ShipShape
                 playerShipPosition.Y = WindowHeight - playerShipTexture.Height;
             }
 
+            if (playerHealth > PlayerMaxHealth)
+            {
+                playerHealth = PlayerMaxHealth;
+            }
+            if (playerHealth <= 0)
+            {
+                this.Exit();
+            }
+
             for (int i = 0; i < playerMissilePositions.Count; i++)
             {
                 Vector2 temp = playerMissilePositions[i];
@@ -212,7 +226,7 @@ namespace ShipShape
                         enemy.Y < playerShipPosition.Y + playerMissileTexture.Height &&
                         enemy.Y + enemyShipTexture.Height > playerShipPosition.Y)
                 {
-                    this.Exit();
+                    this.playerHealth -= EnemyCrashDamage;
                 }
 
                 if (enemyShipPositions[i].X < 0 - enemyShipTexture.Width)
@@ -340,6 +354,8 @@ namespace ShipShape
         private void DrawHUD(GameTime gameTime)
         {
             spriteBatch.DrawString(hudFont, "SCORE: " + playerScore.ToString(), Vector2.Zero, Color.Blue);
+            int x = hudFont.MeasureString("SCORE: " + playerScore.ToString() + " ").X;
+            spriteBatch.DrawString(hudFont, "HP: " + playerHealth + "/" + PlayerMaxHealth, new Vector2(x,0), Color.Green);
 
             if (this.isPaused)
             {
