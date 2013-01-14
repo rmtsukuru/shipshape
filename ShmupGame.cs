@@ -205,6 +205,7 @@ namespace ShipShape
             {
                 Vector2 enemy = enemyShipPositions[i];
                 enemyShipPositions[i] = new Vector2(enemy.X - EnemyShipSpeed, enemy.Y);
+                enemy = enemyShipPositions[i];
 
                 for (int j = 0; j < playerMissilePositions.Count; j++)
                 {
@@ -227,6 +228,7 @@ namespace ShipShape
                         enemy.Y + enemyShipTexture.Height > playerShipPosition.Y)
                 {
                     this.playerHealth -= EnemyCrashDamage;
+                    enemyShipPositions[i] = new Vector2(-2000, 0);
                 }
 
                 if (enemyShipPositions[i].X < 0 - enemyShipTexture.Width)
@@ -354,7 +356,7 @@ namespace ShipShape
         private void DrawHUD(GameTime gameTime)
         {
             spriteBatch.DrawString(hudFont, "SCORE: " + playerScore.ToString(), Vector2.Zero, Color.Blue);
-            int x = hudFont.MeasureString("SCORE: " + playerScore.ToString() + " ").X;
+            float x = hudFont.MeasureString("SCORE: " + playerScore.ToString() + " ").X;
             spriteBatch.DrawString(hudFont, "HP: " + playerHealth + "/" + PlayerMaxHealth, new Vector2(x,0), Color.Green);
 
             if (this.isPaused)
