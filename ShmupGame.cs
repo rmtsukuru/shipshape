@@ -33,8 +33,8 @@ namespace ShipShape
 
         private const int PlayerMissileSpeed = 8;
 
-        private const double BaseEnemySpawnRate = .25;
-        private const double EnemySpawnChance = 0.8;
+        private const double BaseEnemySpawnRate = .1;
+        private const double EnemySpawnChance = 1.0;
         private const int EnemyShipSpeed = 4;
         private const int EnemyCrashDamage = 10;
         private const int EnemyPointValue = 100;

@@ -8,9 +8,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("Ship Shape")]
 [assembly: AssemblyProduct("ShipShape")]
 [assembly: AssemblyDescription("")]
-[assembly: AssemblyCompany("Microsoft")]
+[assembly: AssemblyCompany("Your Face")]
 
-[assembly: AssemblyCopyright("Copyright © Microsoft 2013")]
+[assembly: AssemblyCopyright("")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
